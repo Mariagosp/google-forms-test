@@ -2,6 +2,28 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type Question {
+  id: ID!
+  title: String!
+  type: QuestionType!
+  options: [String!]
+}
+
+enum QuestionType {
+  TEXT
+  MULTIPLE_CHOICE
+  CHECKBOX
+  DATE
+}
+
+type Form {
+  id: ID!
+  title: String!
+  description: String
+  questions: [Question!]!
+}
+
 type Query {
   hello: String!
+  forms: [Form!]!
 }

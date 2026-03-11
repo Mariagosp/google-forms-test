@@ -5,6 +5,8 @@ import { join } from 'path';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AppResolver } from './app.resolver';
+import { FormsModule } from './modules/forms/forms.module';
+import { ResponsesModule } from './modules/responses/responses.module';
 
 @Module({
   imports: [
@@ -15,6 +17,8 @@ import { AppResolver } from './app.resolver';
 
       playground: true,
     }),
+    FormsModule,
+    ResponsesModule,
   ],
   providers: [AppResolver],
 })
