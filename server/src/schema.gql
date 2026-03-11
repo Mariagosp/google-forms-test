@@ -23,7 +23,36 @@ type Form {
   questions: [Question!]!
 }
 
+type Answer {
+  questionId: ID!
+  value: [String!]!
+}
+
+type Response {
+  id: ID!
+  formId: ID!
+  answers: [Answer!]!
+}
+
 type Query {
   hello: String!
   forms: [Form!]!
+  form(id: String!): Form
+  responses(formId: String!): Response
+}
+
+type Mutation {
+  createForm(title: String!, description: String, questions: [QuestionInput!]): Form!
+  submitResponse(formId: String!, answers: [AnswerInput!]!): Response!
+}
+
+input QuestionInput {
+  title: String!
+  type: QuestionType!
+  options: [String!]
+}
+
+input AnswerInput {
+  questionId: ID!
+  value: [String!]!
 }

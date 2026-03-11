@@ -8,6 +8,10 @@ export class FormsService {
     return forms;
   }
 
+  getFormById(id: string): Form | null {
+    return forms.find((form) => form.id === id) || null;
+  }
+
   // добавить форму (для теста)
   createForm(form: Form): Form {
     forms.push(form);
