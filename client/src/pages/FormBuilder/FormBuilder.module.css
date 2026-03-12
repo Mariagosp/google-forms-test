@@ -135,3 +135,9 @@
   background: var(--color-primary-hover);
   transform: translateY(-1px);
 }
+
+.saveButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}

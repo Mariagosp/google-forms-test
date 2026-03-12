@@ -1,12 +1,11 @@
 import styles from "./HomePage.module.css";
 import FormCard from "../../components/FormCard";
-
-const MOCK_FORMS = [
-  { id: "1", title: "Customer Survey", description: "Short feedback form for our product." },
-  { id: "2", title: "Event Registration", description: "Sign up for the upcoming workshop." },
-];
+import { selectForms } from "../../features/forms/selectors";
+import { useAppSelector } from "../../app/store";
 
 export default function HomePage() {
+  const forms = useAppSelector(selectForms);
+
   return (
     <div className={styles.container}>
       <div className={styles.hero}>
@@ -19,12 +18,12 @@ export default function HomePage() {
       <section className={styles.section}>
         <h2 className={styles.sectionTitle}>Recent forms</h2>
         <ul className={styles.formsList}>
-          {MOCK_FORMS.map((form) => (
+          {forms.map((form) => (
             <li key={form.id}>
               <FormCard
                 id={form.id}
                 title={form.title}
-                description={form.description}
+                description={form.description ?? ""}
               />
             </li>
           ))}

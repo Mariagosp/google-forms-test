@@ -1,6 +1,5 @@
+import type { QuestionType } from "../../types";
 import styles from "./QuestionRenderer.module.css";
-
-export type QuestionType = "TEXT" | "MULTIPLE_CHOICE" | "CHECKBOX" | "DATE";
 
 type QuestionRendererProps = {
   type: QuestionType;

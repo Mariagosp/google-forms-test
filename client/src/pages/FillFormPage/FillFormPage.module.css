@@ -70,3 +70,17 @@
   background: var(--color-primary-hover);
   transform: translateY(-1px);
 }
+
+.notFound {
+  margin: 0 0 12px;
+  color: var(--color-text-muted);
+}
+
+.backLink {
+  font-size: 0.9375rem;
+  color: var(--color-primary);
+}
+
+.backLink:hover {
+  text-decoration: none;
+}

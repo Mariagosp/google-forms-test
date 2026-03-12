@@ -1,13 +1,18 @@
+import type { Form, FormResponse } from "../../types";
 import styles from "./ResponseList.module.css";
 
-type Answer = { question: string; answer: string };
-type Response = { id: string; answers: Answer[] };
-
 type ResponseListProps = {
-  responses: Response[];
+  form: Form;
+  responses: FormResponse[];
 };
 
-export default function ResponseList({ responses }: ResponseListProps) {
+function formatAnswerValue(value: string | string[]): string {
+  return Array.isArray(value) ? value.join(", ") : value;
+}
+
+export default function ResponseList({ form, responses }: ResponseListProps) {
+  const questionTitleById = new Map(form.questions.map((q) => [q.id, q.title]));
+
   return (
     <ul className={styles.list}>
       {responses.map((response, index) => (
@@ -16,10 +21,14 @@ export default function ResponseList({ responses }: ResponseListProps) {
             <span className={styles.responseNumber}>Response #{index + 1}</span>
           </div>
           <dl className={styles.answers}>
-            {response.answers.map(({ question, answer }) => (
-              <div key={question} className={styles.answerRow}>
-                <dt className={styles.question}>{question}</dt>
-                <dd className={styles.answer}>{answer}</dd>
+            {response.answers.map(({ questionId, value }) => (
+              <div key={questionId} className={styles.answerRow}>
+                <dt className={styles.question}>
+                  {questionTitleById.get(questionId) ?? questionId}
+                </dt>
+                <dd className={styles.answer}>
+                  {formatAnswerValue(value)}
+                </dd>
               </div>
             ))}
           </dl>

@@ -36,3 +36,8 @@
 .section {
   margin-top: 8px;
 }
+
+.notFound {
+  margin: 0 0 12px;
+  color: var(--color-text-muted);
+}

@@ -1,31 +1,28 @@
 import { Link, useParams } from "react-router-dom";
 import styles from "./ResponsesPage.module.css";
 import ResponseList from "../../components/ResponseList";
-
-const MOCK_RESPONSES = [
-  {
-    id: "r1",
-    answers: [
-      { question: "What is your name?", answer: "John Doe" },
-      { question: "How did you hear about us?", answer: "Search" },
-      { question: "Which topics are you interested in?", answer: "Product updates, Blog" },
-      { question: "When can we schedule a follow-up call?", answer: "2025-03-20" },
-    ],
-  },
-  {
-    id: "r2",
-    answers: [
-      { question: "What is your name?", answer: "Jane Smith" },
-      { question: "How did you hear about us?", answer: "Friend" },
-      { question: "Which topics are you interested in?", answer: "Events" },
-      { question: "When can we schedule a follow-up call?", answer: "2025-03-25" },
-    ],
-  },
-];
+import { selectFormById } from "../../features/forms/selectors";
+import { selectResponsesByFormId } from "../../features/responses/selectors";
+import { useAppSelector } from "../../app/store";
 
 export default function ResponsesPage() {
-  const { id } = useParams();
-  const formId = id ?? "1";
+  const { id } = useParams<{ id: string }>();
+  const formId = id ?? "";
+  const form = useAppSelector((state) => selectFormById(state, formId));
+  const responses = useAppSelector((state) =>
+    selectResponsesByFormId(state, formId)
+  );
+
+  if (!form) {
+    return (
+      <div className={styles.container}>
+        <p className={styles.notFound}>Form not found.</p>
+        <Link to="/" className={styles.backLink}>
+          ← Back to forms
+        </Link>
+      </div>
+    );
+  }
 
   return (
     <div className={styles.container}>
@@ -33,14 +30,14 @@ export default function ResponsesPage() {
         <Link to="/" className={styles.backLink}>
           ← Back to forms
         </Link>
-        <h1 className={styles.title}>Responses</h1>
+        <h1 className={styles.title}>{form.title}</h1>
         <p className={styles.subtitle}>
-          Form ID: {formId} — {MOCK_RESPONSES.length} response(s)
+          {responses.length} response(s)
         </p>
       </div>
 
       <section className={styles.section}>
-        <ResponseList responses={MOCK_RESPONSES} />
+        <ResponseList form={form} responses={responses} />
       </section>
     </div>
   );

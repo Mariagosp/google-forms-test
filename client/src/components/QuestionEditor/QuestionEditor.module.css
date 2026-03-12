@@ -166,3 +166,19 @@
   font-size: 0.875rem;
   color: var(--color-text-muted);
 }
+
+.removeQuestion {
+  margin-top: 14px;
+  padding: 6px 10px;
+  background: transparent;
+  color: var(--color-text-muted);
+  border: none;
+  font-size: 0.8125rem;
+  cursor: pointer;
+  border-radius: var(--radius-sm);
+}
+
+.removeQuestion:hover {
+  color: #dc2626;
+  background: #fef2f2;
+}

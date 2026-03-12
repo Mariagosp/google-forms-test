@@ -1,13 +1,20 @@
-import { configureStore } from '@reduxjs/toolkit'
-import formsReducer from '../features/forms/formsSlice'
+import { configureStore, combineReducers } from "@reduxjs/toolkit";
+import type { TypedUseSelectorHook } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import formsReducer from "../features/forms/formsSlice";
+import responsesSlice from "../features/responses/responsesSlice";
+
+const rootReducer = combineReducers({
+  forms: formsReducer,
+  responses: responsesSlice,
+});
 
 export const store = configureStore({
-  reducer: {
-    forms: formsReducer
-  },
-})
+  reducer: rootReducer,
+});
 
-// Infer the `RootState` and `AppDispatch` types from the store itself
-export type RootState = ReturnType<typeof store.getState>
-// Inferred type: {posts: PostsState, comments: CommentsState, users: UsersState}
-export type AppDispatch = typeof store.dispatch
+export type RootState = ReturnType<typeof rootReducer>;
+export type AppDispatch = typeof store.dispatch;
+
+export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
+export const useAppDispatch: () => AppDispatch = useDispatch;

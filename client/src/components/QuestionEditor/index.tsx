@@ -1,12 +1,11 @@
+import type { Question, QuestionType } from "../../types";
 import styles from "./QuestionEditor.module.css";
 
-export type QuestionType = "TEXT" | "MULTIPLE_CHOICE" | "CHECKBOX" | "DATE";
-
 type QuestionEditorProps = {
-  type: QuestionType;
-  title: string;
-  options: string[];
-  index: number
+  question: Question;
+  index: number;
+  onQuestionChange: (question: Question) => void;
+  onRemove: () => void;
 };
 
 const TYPE_LABELS: Record<QuestionType, string> = {
@@ -20,16 +19,45 @@ const hasOptions = (type: QuestionType) =>
   type === "MULTIPLE_CHOICE" || type === "CHECKBOX";
 
 export default function QuestionEditor({
-  type,
-  title,
-  options,
-  index
+  question,
+  index,
+  onQuestionChange,
+  onRemove,
 }: QuestionEditorProps) {
+  const { type, title, options = [] } = question;
+
+  const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    onQuestionChange({ ...question, title: e.target.value });
+  };
+
+  const handleTypeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const newType = e.target.value as QuestionType;
+    onQuestionChange({
+      ...question,
+      type: newType,
+      options: hasOptions(newType) ? options : undefined,
+    });
+  };
+
+  const handleOptionChange = (i: number, value: string) => {
+    const next = [...options];
+    next[i] = value;
+    onQuestionChange({ ...question, options: next });
+  };
+
+  const handleAddOption = () => {
+    onQuestionChange({ ...question, options: [...options, ""] });
+  };
+
+  const handleRemoveOption = (i: number) => {
+    onQuestionChange({
+      ...question,
+      options: options.filter((_, j) => j !== i),
+    });
+  };
+
   return (
     <div className={styles.container}>
-      {/* <div className={styles.dragHandle} title="Drag to reorder">
-        ⋮⋮
-      </div> */}
       <div className={styles.dragHandle} title="Drag to reorder">
         {index + 1}
       </div>
@@ -38,9 +66,10 @@ export default function QuestionEditor({
           <input
             className={styles.questionInput}
             placeholder="Question title"
-            defaultValue={title}
+            value={title}
+            onChange={handleTitleChange}
           />
-          <select className={styles.select} defaultValue={type}>
+          <select className={styles.select} value={type} onChange={handleTypeChange}>
             <option value="TEXT">{TYPE_LABELS.TEXT}</option>
             <option value="MULTIPLE_CHOICE">{TYPE_LABELS.MULTIPLE_CHOICE}</option>
             <option value="CHECKBOX">{TYPE_LABELS.CHECKBOX}</option>
@@ -59,20 +88,22 @@ export default function QuestionEditor({
                   </span>
                   <input
                     className={styles.optionInput}
-                    defaultValue={opt}
+                    value={opt}
+                    onChange={(e) => handleOptionChange(i, e.target.value)}
                     placeholder="Option"
                   />
                   <button
                     type="button"
                     className={styles.removeOption}
                     title="Remove option"
+                    onClick={() => handleRemoveOption(i)}
                   >
                     ×
                   </button>
                 </li>
               ))}
             </ul>
-            <button type="button" className={styles.addOption}>
+            <button type="button" className={styles.addOption} onClick={handleAddOption}>
               + Add option
             </button>
           </div>
@@ -84,6 +115,15 @@ export default function QuestionEditor({
         {type === "DATE" && (
           <p className={styles.placeholder}>Date picker</p>
         )}
+
+        <button
+          type="button"
+          className={styles.removeQuestion}
+          onClick={onRemove}
+          title="Remove question"
+        >
+          Remove question
+        </button>
       </div>
     </div>
   );

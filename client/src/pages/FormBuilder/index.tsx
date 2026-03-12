@@ -1,66 +1,101 @@
+import { useNavigate } from "react-router-dom";
 import styles from "./FormBuilder.module.css";
 import QuestionEditor from "../../components/QuestionEditor";
+import { selectBuilder } from "../../features/forms/selectors";
+import {
+  setBuilderTitle,
+  setBuilderDescription,
+  addQuestion,
+  removeQuestion,
+  updateQuestion,
+  saveForm,
+} from "../../features/forms/formsSlice";
+import { useAppDispatch, useAppSelector } from "../../app/store";
+import { QuestionType, type Question } from "../../types";
 
-const MOCK_QUESTIONS = [
-  { id: "q1", type: "TEXT" as const, title: "What is your name?", options: [] },
-  {
-    id: "q2",
-    type: "MULTIPLE_CHOICE" as const,
-    title: "Preferred contact method?",
-    options: ["Email", "Phone", "SMS"],
-  },
-  {
-    id: "q3",
-    type: "CHECKBOX" as const,
-    title: "Which topics interest you?",
-    options: ["Product updates", "Events", "Blog"],
-  },
-  { id: "q4", type: "DATE" as const, title: "When can we schedule a call?", options: [] },
-];
+function createNewQuestion(): Question {
+  return {
+    id: `q-b-${Date.now()}-${Math.random().toString(36).slice(2, 9)}`,
+    title: "",
+    type: QuestionType.TEXT,
+    options: [],
+  };
+}
 
 export default function FormBuilderPage() {
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+  const builder = useAppSelector(selectBuilder);
+
+  const handleAddQuestion = () => {
+    dispatch(addQuestion(createNewQuestion()));
+  };
+
+  const handleSaveForm = () => {
+    dispatch(saveForm());
+    navigate("/");
+  };
+
+  const handleQuestionChange = (question: Question) => {
+    dispatch(updateQuestion(question));
+  };
+
+  const handleRemoveQuestion = (questionId: string) => {
+    dispatch(removeQuestion(questionId));
+  };
+
   return (
     <div className={styles.container}>
       <div className={styles.formHeader}>
         <h1 className={styles.title}>Create form</h1>
-        <p className={styles.subtitle}>Add a title, description, and your questions.</p>
+        <p className={styles.subtitle}>
+          Add a title, description, and your questions.
+        </p>
       </div>
 
       <div className={styles.formBox}>
         <input
           className={styles.input}
           placeholder="Form title"
-          defaultValue="Untitled form"
+          value={builder.title}
+          onChange={(e) => dispatch(setBuilderTitle(e.target.value))}
         />
         <textarea
           className={styles.textarea}
           placeholder="Form description (optional)"
           rows={3}
+          value={builder.description}
+          onChange={(e) => dispatch(setBuilderDescription(e.target.value))}
         />
       </div>
 
       <div className={styles.questionsHeader}>
         <h2 className={styles.questionsTitle}>Questions</h2>
-        <button type="button" className={styles.addQuestion}>
+        <button type="button" className={styles.addQuestion} onClick={handleAddQuestion}>
           + Add question
         </button>
       </div>
 
       <ul className={styles.questionsList}>
-        {MOCK_QUESTIONS.map((q, index) => (
+        {builder.questions.map((q, index) => (
           <li key={q.id} className={styles.questionItem}>
             <QuestionEditor
-              type={q.type}
-              title={q.title}
-              options={q.options}
+              question={q}
               index={index}
+              onQuestionChange={handleQuestionChange}
+              onRemove={() => handleRemoveQuestion(q.id)}
             />
           </li>
         ))}
       </ul>
 
       <div className={styles.actions}>
-        <button type="button" className={styles.saveButton}>
+        <button
+          type="button"
+          className={styles.saveButton}
+          onClick={handleSaveForm}
+          disabled={!builder.title.trim()}
+        >
           Save form
         </button>
       </div>
