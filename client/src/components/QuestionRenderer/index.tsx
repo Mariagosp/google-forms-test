@@ -1,3 +1,4 @@
+import { useState } from "react";
 import type { QuestionType } from "../../types";
 import styles from "./QuestionRenderer.module.css";
 
@@ -5,13 +6,27 @@ type QuestionRendererProps = {
   type: QuestionType;
   title: string;
   options: string[];
+  questionId: string;
+  onChange: (value: string | string[]) => void;
 };
 
 export default function QuestionRenderer({
   type,
   title,
   options,
+  questionId, 
+  onChange
 }: QuestionRendererProps) {
+  const [checkboxValues, setCheckboxValues] = useState<string[]>([]);
+
+  const toggleCheckbox = (opt: string) => {
+    const newVals = checkboxValues.includes(opt)
+      ? checkboxValues.filter((v) => v !== opt)
+      : [...checkboxValues, opt];
+    setCheckboxValues(newVals);
+    onChange(newVals);
+  };
+
   return (
     <div className={styles.question}>
       <label className={styles.label}>{title}</label>
@@ -20,6 +35,7 @@ export default function QuestionRenderer({
         <input
           type="text"
           className={styles.input}
+          onChange={(e) => onChange(e.target.value)}
           placeholder="Your answer"
         />
       )}
@@ -28,7 +44,7 @@ export default function QuestionRenderer({
         <div className={styles.optionGroup} role="group">
           {options.map((opt, i) => (
             <label key={i} className={styles.radioOption}>
-              <input type="radio" name={`q-${title}`} value={opt} className={styles.radioInput} />
+              <input type="radio" name={`q-${title}`} value={opt} className={styles.radioInput} onChange={(e) => onChange(e.target.value)} />
               <span className={styles.radioLabel}>{opt}</span>
             </label>
           ))}
@@ -37,13 +53,13 @@ export default function QuestionRenderer({
 
       {type === "CHECKBOX" && (
         <div className={styles.optionGroup} role="group">
-          {options.map((opt, i) => (
-            <label key={i} className={styles.checkboxOption}>
-              <input type="checkbox" value={opt} className={styles.checkboxInput} />
-              <span className={styles.checkboxLabel}>{opt}</span>
-            </label>
-          ))}
-        </div>
+        {options.map((opt, i) => (
+          <label key={i} className={styles.checkboxOption}>
+            <input type="checkbox" value={opt} className={styles.checkboxInput} onChange={(e) => toggleCheckbox(opt)} />
+            <span className={styles.checkboxLabel}>{opt}</span>
+          </label>
+        ))}
+      </div>
       )}
 
       {type === "DATE" && (

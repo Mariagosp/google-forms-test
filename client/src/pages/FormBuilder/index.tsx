@@ -8,10 +8,11 @@ import {
   addQuestion,
   removeQuestion,
   updateQuestion,
-  saveForm,
+  resetBuilder,
 } from "../../features/forms/formsSlice";
 import { useAppDispatch, useAppSelector } from "../../app/store";
 import { QuestionType, type Question } from "../../types";
+import { useCreateFormMutation } from "../../app/api/formsApi";
 
 function createNewQuestion(): Question {
   return {
@@ -31,17 +32,32 @@ export default function FormBuilderPage() {
     dispatch(addQuestion(createNewQuestion()));
   };
 
-  const handleSaveForm = () => {
-    dispatch(saveForm());
-    navigate("/");
-  };
-
   const handleQuestionChange = (question: Question) => {
     dispatch(updateQuestion(question));
   };
 
   const handleRemoveQuestion = (questionId: string) => {
     dispatch(removeQuestion(questionId));
+  };
+
+  const [createForm, { isLoading: isCreating }] = useCreateFormMutation();
+
+  const handleSaveForm = async () => {
+    try {
+      await createForm({
+        title: builder.title.trim(),
+        description: builder.description.trim() || undefined,
+        questions: builder.questions.map((q) => ({
+          title: q.title,
+          type: q.type,
+          options: q.options?.length ? q.options : undefined,
+        })),
+      }).unwrap();
+      dispatch(resetBuilder());
+      navigate("/");
+    } catch {
+      // error is available from mutation result if you want to show it
+    }
   };
 
   return (
@@ -71,7 +87,11 @@ export default function FormBuilderPage() {
 
       <div className={styles.questionsHeader}>
         <h2 className={styles.questionsTitle}>Questions</h2>
-        <button type="button" className={styles.addQuestion} onClick={handleAddQuestion}>
+        <button
+          type="button"
+          className={styles.addQuestion}
+          onClick={handleAddQuestion}
+        >
           + Add question
         </button>
       </div>
@@ -83,7 +103,9 @@ export default function FormBuilderPage() {
               question={q}
               index={index}
               onQuestionChange={handleQuestionChange}
-              onRemove={() => handleRemoveQuestion(q.id)}
+              onRemove={() =>
+                handleRemoveQuestion(q?.id || Date.now().toString())
+              }
             />
           </li>
         ))}
@@ -94,9 +116,9 @@ export default function FormBuilderPage() {
           type="button"
           className={styles.saveButton}
           onClick={handleSaveForm}
-          disabled={!builder.title.trim()}
+          disabled={!builder.title.trim() || isCreating}
         >
-          Save form
+          {isCreating ? "Saving…" : "Save form"}
         </button>
       </div>
     </div>

@@ -6,7 +6,7 @@ export interface Form {
 }
 
 export interface Question {
-  id: string;
+  id?: string;
   title: string;
   type: QuestionType;
   options?: string[];

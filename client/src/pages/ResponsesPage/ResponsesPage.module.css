@@ -41,3 +41,9 @@
   margin: 0 0 12px;
   color: var(--color-text-muted);
 }
+
+.status {
+  margin: 0;
+  padding: 16px 0;
+  color: var(--color-text-muted);
+}

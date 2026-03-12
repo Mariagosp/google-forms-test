@@ -84,3 +84,9 @@
 .backLink:hover {
   text-decoration: none;
 }
+
+.status {
+  margin: 0;
+  padding: 16px 0;
+  color: var(--color-text-muted);
+}

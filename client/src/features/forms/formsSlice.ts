@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
-import { QuestionType, type Form, type Question } from "../../types";
+import type { Form, Question } from "../../types";
 
 export interface FormsState {
   forms: Form[];
@@ -13,102 +13,7 @@ export interface FormsState {
 }
 
 const initialState: FormsState = {
-  forms: [
-    {
-      id: "form-1",
-      title: "Customer Satisfaction Survey",
-      description: "Help us improve our service",
-      questions: [
-        {
-          id: "q-1",
-          title: "What is your name?",
-          type: QuestionType.TEXT,
-          options: [],
-        },
-        {
-          id: "q-2",
-          title: "How satisfied are you with our service?",
-          type: QuestionType.MULTIPLE_CHOICE,
-          options: ["Very satisfied", "Satisfied", "Neutral", "Unsatisfied"],
-        },
-        {
-          id: "q-3",
-          title: "Which features do you use?",
-          type: QuestionType.CHECKBOX,
-          options: ["Dashboard", "Analytics", "Reports", "Notifications"],
-        },
-        {
-          id: "q-4",
-          title: "When did you start using our product?",
-          type: QuestionType.DATE,
-          options: [],
-        },
-      ],
-    },
-
-    {
-      id: "form-2",
-      title: "Employee Feedback",
-      description: "Internal company feedback form",
-      questions: [
-        {
-          id: "q-5",
-          title: "Employee name",
-          type: QuestionType.TEXT,
-          options: [],
-        },
-        {
-          id: "q-6",
-          title: "How would you rate your work environment?",
-          type: QuestionType.MULTIPLE_CHOICE,
-          options: ["Excellent", "Good", "Average", "Poor"],
-        },
-        {
-          id: "q-7",
-          title: "Which benefits do you value the most?",
-          type: QuestionType.CHECKBOX,
-          options: [
-            "Health insurance",
-            "Flexible hours",
-            "Remote work",
-            "Education support",
-          ],
-        },
-      ],
-    },
-
-    {
-      id: "form-3",
-      title: "Event Registration",
-      description: "Register for our upcoming event",
-      questions: [
-        {
-          id: "q-8",
-          title: "Full name",
-          type: QuestionType.TEXT,
-          options: [],
-        },
-        {
-          id: "q-9",
-          title: "Preferred session",
-          type: QuestionType.MULTIPLE_CHOICE,
-          options: ["Morning session", "Afternoon session", "Evening session"],
-        },
-        {
-          id: "q-10",
-          title: "Dietary preferences",
-          type: QuestionType.CHECKBOX,
-          options: ["Vegetarian", "Vegan", "Gluten-free", "No preference"],
-        },
-        {
-          id: "q-11",
-          title: "Arrival date",
-          type: QuestionType.DATE,
-          options: [],
-        },
-      ],
-    },
-  ],
+  forms: [],
   currentForm: null,
   builder: {
     title: "",
@@ -127,6 +32,15 @@ export const formsSlice = createSlice({
 
     setCurrentForm(state, action: PayloadAction<Form>) {
       state.currentForm = action.payload;
+    },
+
+    mergeForm(state, action: PayloadAction<Form>) {
+      const idx = state.forms.findIndex((f) => f.id === action.payload.id);
+      if (idx >= 0) {
+        state.forms[idx] = action.payload;
+      } else {
+        state.forms.push(action.payload);
+      }
     },
 
     setBuilderTitle(state, action: PayloadAction<string>) {
@@ -190,6 +104,7 @@ export const formsSlice = createSlice({
 export const {
   setForms,
   setCurrentForm,
+  mergeForm,
   setBuilderDescription,
   setBuilderTitle,
   addQuestion,

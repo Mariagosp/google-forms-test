@@ -1,10 +1,26 @@
+import { useEffect } from "react";
 import styles from "./HomePage.module.css";
 import FormCard from "../../components/FormCard";
 import { selectForms } from "../../features/forms/selectors";
-import { useAppSelector } from "../../app/store";
+import { useAppSelector, useAppDispatch } from "../../app/store";
+import { useGetFormsQuery } from "../../app/api/formsApi";
+import { setForms } from "../../features/forms/formsSlice";
 
 export default function HomePage() {
-  const forms = useAppSelector(selectForms);
+  const dispatch = useAppDispatch();
+  const { data, isLoading, error } = useGetFormsQuery();
+  const formsFromStore = useAppSelector(selectForms);
+
+  useEffect(() => {
+    if (data) {
+      dispatch(setForms(data));
+    }
+  }, [data, dispatch]);
+
+  const forms = data ?? formsFromStore;
+
+  if (isLoading) return <p className={styles.status}>Loading...</p>;
+  if (error) return <p className={styles.status}>Error loading forms</p>;
 
   return (
     <div className={styles.container}>
