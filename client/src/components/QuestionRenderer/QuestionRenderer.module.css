@@ -1,23 +1,72 @@
 .question {
-  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 
 .label {
   font-weight: 600;
-  margin-bottom: 8px;
+  font-size: 0.9375rem;
+  color: var(--color-text);
   display: block;
 }
 
 .input {
   width: 100%;
-  padding: 10px;
-  border-radius: 8px;
-  border: 1px solid #e5e7eb;
+  max-width: 400px;
+  padding: 12px 14px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-border);
+  font-size: 0.9375rem;
+  font-family: inherit;
+  outline: none;
+  transition: border-color 0.2s;
 }
 
-.option {
-  margin-top: 6px;
+.input:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px var(--color-primary-light);
+}
+
+.input[type="date"] {
+  cursor: pointer;
+}
+
+.optionGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.radioOption,
+.checkboxOption {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 12px;
+  cursor: pointer;
+  padding: 10px 12px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-border);
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.radioOption:hover,
+.checkboxOption:hover {
+  border-color: var(--color-border-focus);
+  background: var(--color-bg);
+}
+
+.radioInput,
+.checkboxInput {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--color-primary);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.radioLabel,
+.checkboxLabel {
+  font-size: 0.9375rem;
+  color: var(--color-text);
 }

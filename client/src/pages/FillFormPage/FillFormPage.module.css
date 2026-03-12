@@ -1,40 +1,72 @@
 .container {
-  max-width: 760px;
-  margin: auto;
-  padding: 50px 20px;
-}
-
-.title {
-  font-size: 26px;
-  font-weight: 700;
-  margin-bottom: 10px;
-}
-
-.description {
-  color: #6b7280;
-  margin-bottom: 25px;
+  max-width: 640px;
+  margin: 0 auto;
 }
 
 .formCard {
-  background: white;
-  border-radius: 12px;
-  padding: 25px;
-  border: 1px solid #e6e6eb;
-  box-shadow: 0 8px 22px rgba(0,0,0,0.05);
+  background: var(--color-surface);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-border);
+  padding: 32px 28px;
+  box-shadow: var(--shadow-md);
+}
+
+.header {
+  margin-bottom: 28px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: 0 0 8px;
+  letter-spacing: -0.02em;
+}
+
+.description {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: 0.9375rem;
+  line-height: 1.5;
+}
+
+.questionsList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  counter-reset: question;
+}
+
+.questionItem {
+  counter-increment: question;
+  margin-bottom: 28px;
+}
+
+.questionItem:last-of-type {
+  margin-bottom: 0;
+}
+
+.actions {
+  margin-top: 32px;
+  padding-top: 24px;
+  border-top: 1px solid var(--color-border);
 }
 
 .submitButton {
-  margin-top: 25px;
-  background: #7c3aed;
+  padding: 12px 28px;
+  background: var(--color-primary);
   color: white;
   border: none;
-  padding: 13px 22px;
-  border-radius: 8px;
-  cursor: pointer;
+  border-radius: var(--radius-sm);
+  font-size: 0.9375rem;
   font-weight: 500;
-  box-shadow: 0 8px 18px rgba(124,58,237,0.25);
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+  transition: background 0.2s, transform 0.15s;
 }
 
 .submitButton:hover {
-  background: #6d28d9;
+  background: var(--color-primary-hover);
+  transform: translateY(-1px);
 }
