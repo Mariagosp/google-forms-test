@@ -1,0 +1,38 @@
+.container {
+  max-width: 900px;
+  margin: auto;
+  padding: 50px 20px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 35px;
+}
+
+.title {
+  font-size: 30px;
+  font-weight: 700;
+}
+
+.createButton {
+  background: #7c3aed;
+  color: white;
+  padding: 12px 20px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 500;
+  transition: 0.2s;
+  box-shadow: 0 6px 16px rgba(124, 58, 237, 0.25);
+}
+
+.createButton:hover {
+  background: #6d28d9;
+  transform: translateY(-1px);
+}
+
+.formsList {
+  display: grid;
+  gap: 20px;
+}

@@ -1,0 +1,23 @@
+.question {
+  margin-bottom: 20px;
+}
+
+.label {
+  font-weight: 600;
+  margin-bottom: 8px;
+  display: block;
+}
+
+.input {
+  width: 100%;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+}
+
+.option {
+  margin-top: 6px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}

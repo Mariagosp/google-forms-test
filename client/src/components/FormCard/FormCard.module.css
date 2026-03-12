@@ -1,0 +1,40 @@
+.card {
+  background: white;
+  border-radius: 12px;
+  padding: 22px;
+  border: 1px solid #e6e6eb;
+  transition: 0.25s;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+}
+
+.card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 28px rgba(0,0,0,0.08);
+}
+
+.title {
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.description {
+  color: #6b7280;
+  font-size: 14px;
+}
+
+.actions {
+  margin-top: 18px;
+  display: flex;
+  gap: 15px;
+}
+
+.actions a {
+  text-decoration: none;
+  font-weight: 500;
+  color: #7c3aed;
+}
+
+.actions a:hover {
+  text-decoration: underline;
+}

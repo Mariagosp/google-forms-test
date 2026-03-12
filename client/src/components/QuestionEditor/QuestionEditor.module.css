@@ -1,0 +1,48 @@
+.container {
+  background: white;
+  border-radius: 12px;
+  padding: 18px;
+  border: 1px solid #e6e6eb;
+  box-shadow: 0 6px 16px rgba(0,0,0,0.05);
+}
+
+.questionInput {
+  width: 100%;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+  font-size: 15px;
+}
+
+.select {
+  margin-top: 12px;
+  padding: 8px;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+}
+
+.options {
+  margin-top: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.optionInput {
+  padding: 8px;
+  border-radius: 6px;
+  border: 1px solid #e5e7eb;
+}
+
+.addOption {
+  margin-top: 10px;
+  background: #ede9fe;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.addOption:hover {
+  background: #ddd6fe;
+}

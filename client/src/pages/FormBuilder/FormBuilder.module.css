@@ -1,0 +1,75 @@
+.container {
+  max-width: 760px;
+  margin: auto;
+  padding: 50px 20px;
+}
+
+.title {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 25px;
+}
+
+.formBox {
+  background: white;
+  border-radius: 12px;
+  padding: 25px;
+  border: 1px solid #e6e6eb;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+  margin-bottom: 25px;
+}
+
+.input {
+  width: 100%;
+  font-size: 16px;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+  outline: none;
+  transition: 0.2s;
+}
+
+.input:focus {
+  border-color: #7c3aed;
+  box-shadow: 0 0 0 2px rgba(124,58,237,0.15);
+}
+
+.textarea {
+  width: 100%;
+  min-height: 90px;
+  margin-top: 12px;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+  resize: vertical;
+  outline: none;
+}
+
+.textarea:focus {
+  border-color: #7c3aed;
+  box-shadow: 0 0 0 2px rgba(124,58,237,0.15);
+}
+
+.questionsBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.saveButton {
+  margin-top: 30px;
+  background: #7c3aed;
+  color: white;
+  padding: 14px 22px;
+  border-radius: 8px;
+  border: none;
+  font-size: 15px;
+  cursor: pointer;
+  transition: 0.2s;
+  box-shadow: 0 8px 18px rgba(124,58,237,0.25);
+}
+
+.saveButton:hover {
+  background: #6d28d9;
+  transform: translateY(-1px);
+}

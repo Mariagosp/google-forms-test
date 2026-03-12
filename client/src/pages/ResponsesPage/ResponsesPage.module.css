@@ -1,0 +1,11 @@
+.container {
+  max-width: 800px;
+  margin: auto;
+  padding: 50px 20px;
+}
+
+.title {
+  font-size: 26px;
+  font-weight: 700;
+  margin-bottom: 25px;
+}
