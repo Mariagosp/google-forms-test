@@ -9,23 +9,27 @@ import HomePage from "./pages/HomePage/index.tsx";
 import FillFormPage from "./pages/FillFormPage/index.tsx";
 import ResponsesPage from "./pages/ResponsesPage/index.tsx";
 import FormBuilderPage from "./pages/FormBuilder/index.tsx";
+import { ApolloProvider } from "@apollo/client/react";
+import { client } from "./apolloClient.ts";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <Provider store={store}>
-      <HashRouter>
-        <Routes>
-          <Route path="/" element={<App />}>
-            <Route index element={<HomePage />} />
-            <Route path="forms">
+    <ApolloProvider client={client}>
+      <Provider store={store}>
+        <HashRouter>
+          <Routes>
+            <Route path="/" element={<App />}>
               <Route index element={<HomePage />} />
-              <Route path="new" element={<FormBuilderPage />} />
-              <Route path=":id/fill" element={<FillFormPage />} />
-              <Route path=":id/responses" element={<ResponsesPage />} />
+              <Route path="forms">
+                <Route index element={<HomePage />} />
+                <Route path="new" element={<FormBuilderPage />} />
+                <Route path=":id/fill" element={<FillFormPage />} />
+                <Route path=":id/responses" element={<ResponsesPage />} />
+              </Route>
             </Route>
-          </Route>
-        </Routes>
-      </HashRouter>
-    </Provider>
+          </Routes>
+        </HashRouter>
+      </Provider>
+    </ApolloProvider>
   </StrictMode>
 );
