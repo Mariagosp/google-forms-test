@@ -67,6 +67,7 @@ export default function QuestionRenderer({
           type="date"
           className={styles.input}
           aria-label={title}
+          onChange={(e) => onChange(e.target.value)}
         />
       )}
     </div>

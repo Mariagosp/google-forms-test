@@ -38,7 +38,7 @@ type Query {
   hello: String!
   forms: [Form!]!
   form(id: String!): Form
-  responses(formId: String!): Response
+  responses(formId: String!): [Response!]
 }
 
 type Mutation {

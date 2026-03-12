@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import styles from "./FillFormPage.module.css";
 import QuestionRenderer from "../../components/QuestionRenderer";
 import { selectFormById } from "../../features/forms/selectors";
@@ -15,6 +15,8 @@ export default function FillFormPage() {
   const { id } = useParams<{ id: string }>();
   const formId = id ?? "";
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+
   const {
     data: formFromApi,
     isLoading,
@@ -53,6 +55,11 @@ export default function FillFormPage() {
   const form = formFromApi ?? formFromStore;
 
   const handleSubmit = async () => {
+    if (answers.length < (form?.questions.length || 0)) {
+      alert("Please answer all questions before submitting.");
+      return;
+    }
+
     try {
       await submitResponse({
         formId,
@@ -60,8 +67,11 @@ export default function FillFormPage() {
           questionId: a.questionId,
           value: Array.isArray(a.value) ? a.value : [a.value],
         })),
-      });
+      }).unwrap();
+
       alert("Form submitted successfully!");
+      navigate("/");
+      setAnswers([]);
     } catch (err) {
       console.error(err);
       alert("Error submitting form.");

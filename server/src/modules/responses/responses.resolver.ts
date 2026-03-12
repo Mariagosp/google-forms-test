@@ -10,7 +10,7 @@ const { v4: uuidv4 } = require('uuid');
 export class ResponsesResolver {
   constructor(private readonly responseService: ResponsesService) {}
 
-  @Query(() => Response, { nullable: true })
+  @Query(() => [Response], { nullable: true })
   responses(@Args('formId') formId: string): Response[] {
     return this.responseService.getResponsesByFormId(formId);
   }

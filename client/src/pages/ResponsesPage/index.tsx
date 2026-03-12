@@ -14,10 +14,11 @@ export default function ResponsesPage() {
   const formId = id ?? "";
   const dispatch = useAppDispatch();
 
-  const {
-    data: formFromApi,
-    isLoading: formLoading,
-  } = useGetFormQuery(formId, { skip: !formId });
+  const { data: formFromApi, isLoading: formLoading } = useGetFormQuery(
+    formId,
+    { skip: !formId }
+  );
+
   const { data: responsesData } = useGetResponsesQuery(formId, {
     skip: !formId,
   });
