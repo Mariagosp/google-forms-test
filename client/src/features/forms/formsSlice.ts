@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
-import type { Form, Question } from "../../types";
+import type { Form, Question } from "../../services/generatedApi";
 
 export interface FormsState {
   forms: Form[];

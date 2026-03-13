@@ -1,4 +1,4 @@
-import type { Question, QuestionType } from "../../types";
+import type { Question, QuestionType } from "../../services/generatedApi";
 import styles from "./QuestionEditor.module.css";
 
 type QuestionEditorProps = {
@@ -24,7 +24,8 @@ export default function QuestionEditor({
   onQuestionChange,
   onRemove,
 }: QuestionEditorProps) {
-  const { type, title, options = [] } = question;
+  const { type, title, options: rawOptions } = question;
+  const options = rawOptions ?? [];
 
   const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     onQuestionChange({ ...question, title: e.target.value });
@@ -58,7 +59,7 @@ export default function QuestionEditor({
 
   return (
     <div className={styles.container}>
-      <div className={styles.dragHandle} title="Drag to reorder">
+      <div className={styles.dragHandle}>
         {index + 1}
       </div>
       <div className={styles.body}>

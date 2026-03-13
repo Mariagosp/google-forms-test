@@ -11,17 +11,14 @@ import {
   resetBuilder,
 } from "../../features/forms/formsSlice";
 import { useAppDispatch, useAppSelector } from "../../app/store";
-import { QuestionType, type Question } from "../../types";
-import {
-  useCreateFormMutation,
-  QuestionType as GqlQuestionType,
-} from "../../services/generatedApi";
+import { QuestionType, type Question } from "../../services/generatedApi";
+import { useCreateFormMutation } from "../../services/generatedApi";
 
 function createNewQuestion(): Question {
   return {
     id: `q-b-${Date.now()}-${Math.random().toString(36).slice(2, 9)}`,
     title: "",
-    type: QuestionType.TEXT,
+    type: QuestionType.Text,
     options: [],
   };
 }
@@ -52,22 +49,13 @@ export default function FormBuilderPage() {
         description: builder.description.trim() || undefined,
         questions: builder.questions.map((q) => ({
           title: q.title,
-          // Map our local string-union QuestionType to GraphQL enum QuestionType
-          type:
-            q.type === QuestionType.TEXT
-              ? GqlQuestionType.Text
-              : q.type === QuestionType.MULTIPLE_CHOICE
-              ? GqlQuestionType.MultipleChoice
-              : q.type === QuestionType.CHECKBOX
-              ? GqlQuestionType.Checkbox
-              : GqlQuestionType.Date,
+          type: q.type,
           options: q.options?.length ? q.options : undefined,
         })),
       }).unwrap();
       dispatch(resetBuilder());
       navigate("/");
     } catch {
-      // error is available from mutation result if you want to show it
     }
   };
 

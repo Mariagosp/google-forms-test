@@ -9,7 +9,7 @@ import {
   useGetFormQuery,
   useGetResponsesQuery,
 } from "../../services/generatedApi";
-import type { Form as DomainForm } from "../../types";
+import type { Form as DomainForm } from "../../services/generatedApi";
 import { mergeForm } from "../../features/forms/formsSlice";
 import { setResponsesForForm } from "../../features/responses/responsesSlice";
 
@@ -30,7 +30,6 @@ export default function ResponsesPage() {
     { formId },
     {
       skip: !formId,
-      // Ensure fresh data when navigating back to this page after submitting a response
       refetchOnMountOrArgChange: true,
     }
   );
@@ -42,7 +41,6 @@ export default function ResponsesPage() {
     selectResponsesByFormId(state, formId)
   );
 
-  // Normalize GraphQL form data into our domain `Form` type used in Redux
   const formFromApi = useMemo((): DomainForm | undefined => {
     if (!formQueryData?.form) return undefined;
     return {

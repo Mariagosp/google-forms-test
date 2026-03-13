@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
-import type { Answer, FormResponse } from "../../types";
+import type { Answer, Response as FormResponse } from "../../services/generatedApi";
 
 type ResponsesState = {
   responses: FormResponse[];

@@ -1,4 +1,4 @@
-import type { Form, FormResponse } from "../../types";
+import type { Form, Response as FormResponse } from "../../services/generatedApi";
 import styles from "./ResponseList.module.css";
 
 type ResponseListProps = {

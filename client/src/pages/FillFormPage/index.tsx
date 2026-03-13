@@ -4,10 +4,6 @@ import styles from "./FillFormPage.module.css";
 import QuestionRenderer from "../../components/QuestionRenderer";
 import { selectFormById } from "../../features/forms/selectors";
 import { useAppSelector, useAppDispatch } from "../../app/store";
-// import {
-//   useGetFormQuery,
-//   useSubmitResponseMutation,
-// } from "../../app/api/formsApi";
 import { mergeForm } from "../../features/forms/formsSlice";
 import {
   useGetFormQuery,
@@ -17,7 +13,6 @@ import type {
   Question as GqlQuestion,
   Form as GqlForm,
 } from "../../services/generatedApi";
-// import { useGetFormQuery, useSubmitResponseMutation } from "../../graphql/generated";
 
 export default function FillFormPage() {
   const { id } = useParams<{ id: string }>();
@@ -128,7 +123,6 @@ export default function FillFormPage() {
                 type={q.type}
                 title={q.title}
                 options={q.options ?? []}
-                questionId={q.id!}
                 onChange={(value) => handleAnswerChange(q.id!, value)}
               />
             </li>
