@@ -4,26 +4,18 @@ import FormCard from "../../components/FormCard";
 import { useAppSelector, useAppDispatch } from "../../app/store";
 import { setForms } from "../../features/forms/formsSlice";
 import { useGetFormsQuery } from "../../services/generatedApi";
+import { mapGqlFormsToDomainForms } from "../../utils/formMappers";
 
 export default function HomePage() {
   const dispatch = useAppDispatch();
   const { data, isLoading, error } = useGetFormsQuery(undefined, {
     refetchOnMountOrArgChange: true,
   });
-  const formsFromStore = useAppSelector(state => state.forms.forms);
+  const formsFromStore = useAppSelector((state) => state.forms.forms);
 
   useEffect(() => {
     if (data?.forms) {
-      const normalizedForms = data.forms.map((form) => ({
-        ...form,
-        description: form.description ?? "",
-        questions: form.questions.map((q) => ({
-          ...q,
-          options: q.options ?? [],
-        })),
-      }));
-
-      dispatch(setForms(normalizedForms));
+      dispatch(setForms(mapGqlFormsToDomainForms(data.forms)));
     }
   }, [data, dispatch]);
 

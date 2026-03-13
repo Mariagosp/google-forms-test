@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import styles from "./FillFormPage.module.css";
 import QuestionRenderer from "../../components/QuestionRenderer";
@@ -10,9 +10,10 @@ import {
   useSubmitResponseMutation,
 } from "../../services/generatedApi";
 import type {
-  Question as GqlQuestion,
   Form as GqlForm,
 } from "../../services/generatedApi";
+import { mapGqlFormToDomainForm } from "../../utils/formMappers";
+import { useFormAnswers } from "../../hooks";
 
 export default function FillFormPage() {
   const { id } = useParams<{ id: string }>();
@@ -32,45 +33,15 @@ export default function FillFormPage() {
 
   const form: GqlForm | undefined = formFromApi?.form ?? formFromStore;
 
-  const [answers, setAnswers] = useState<
-    { questionId: GqlQuestion["id"]; value: string | string[] }[]
-  >([]);
-
-  const handleAnswerChange = (
-    questionId: GqlQuestion["id"],
-    value: string | string[]
-  ) => {
-    setAnswers((prev) => {
-      const existing = prev.find((a) => a.questionId === questionId);
-      if (existing) {
-        return prev.map((a) =>
-          a.questionId === questionId ? { questionId, value } : a
-        );
-      } else {
-        return [...prev, { questionId, value }];
-      }
-    });
-  };
-
-  useEffect(() => {
-    if (formFromApi?.form) {
-      const safeForm = {
-        id: formFromApi.form.id,
-        title: formFromApi.form.title,
-        questions: formFromApi.form.questions.map((question) => ({
-          id: question.id,
-          title: question.title,
-          type: question.type,
-          options: question.options ?? undefined,
-        })),
-        description: formFromApi.form.description ?? undefined,
-      };
-      dispatch(mergeForm(safeForm));
-    }
-  }, [formFromApi, dispatch]);
+  const {
+    handleAnswerChange,
+    canSubmit,
+    setAnswers,
+    buildSubmitPayload,
+  } = useFormAnswers(form?.questions);
 
   const handleSubmit = async () => {
-    if (answers.length < (form?.questions.length || 0)) {
+    if (!canSubmit) {
       alert("Please answer all questions before submitting.");
       return;
     }
@@ -78,10 +49,7 @@ export default function FillFormPage() {
     try {
       await submitResponse({
         formId,
-        answers: answers.map((a) => ({
-          questionId: a.questionId,
-          value: Array.isArray(a.value) ? a.value : [a.value],
-        })),
+        answers: buildSubmitPayload(),
       }).unwrap();
 
       alert("Form submitted successfully!");
@@ -92,6 +60,12 @@ export default function FillFormPage() {
       alert("Error submitting form.");
     }
   };
+
+  useEffect(() => {
+    if (formFromApi?.form) {
+      dispatch(mergeForm(mapGqlFormToDomainForm(formFromApi.form)));
+    }
+  }, [formFromApi, dispatch]);
 
   if (isLoading) return <p className={styles.status}>Loading...</p>;
   if (error) return <p className={styles.status}>Error loading form</p>;

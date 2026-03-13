@@ -1,4 +1,5 @@
 import type { Question, QuestionType } from "../../services/generatedApi";
+import { useQuestionOptionsEditor } from "../../hooks";
 import styles from "./QuestionEditor.module.css";
 
 type QuestionEditorProps = {
@@ -15,46 +16,42 @@ const TYPE_LABELS: Record<QuestionType, string> = {
   DATE: "Date",
 };
 
-const hasOptions = (type: QuestionType) =>
-  type === "MULTIPLE_CHOICE" || type === "CHECKBOX";
-
 export default function QuestionEditor({
   question,
   index,
   onQuestionChange,
   onRemove,
 }: QuestionEditorProps) {
-  const { type, title, options: rawOptions } = question;
-  const options = rawOptions ?? [];
+  const { type, title } = question;
+  const {
+    options,
+    hasOptions,
+    changeTitle,
+    changeType,
+    changeOption,
+    addOption,
+    removeOption,
+  } = useQuestionOptionsEditor(question, onQuestionChange);
 
   const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    onQuestionChange({ ...question, title: e.target.value });
+    changeTitle(e.target.value);
   };
 
   const handleTypeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const newType = e.target.value as QuestionType;
-    onQuestionChange({
-      ...question,
-      type: newType,
-      options: hasOptions(newType) ? options : undefined,
-    });
+    changeType(newType);
   };
 
   const handleOptionChange = (i: number, value: string) => {
-    const next = [...options];
-    next[i] = value;
-    onQuestionChange({ ...question, options: next });
+    changeOption(i, value);
   };
 
   const handleAddOption = () => {
-    onQuestionChange({ ...question, options: [...options, ""] });
+    addOption();
   };
 
   const handleRemoveOption = (i: number) => {
-    onQuestionChange({
-      ...question,
-      options: options.filter((_, j) => j !== i),
-    });
+    removeOption(i);
   };
 
   return (

@@ -1,5 +1,5 @@
-import { useState } from "react";
 import type { QuestionType } from "../../services/generatedApi";
+import { useCheckboxAnswers } from "../../hooks";
 import styles from "./QuestionRenderer.module.css";
 
 type QuestionRendererProps = {
@@ -15,15 +15,7 @@ export default function QuestionRenderer({
   options,
   onChange,
 }: QuestionRendererProps) {
-  const [checkboxValues, setCheckboxValues] = useState<string[]>([]);
-
-  const toggleCheckbox = (opt: string) => {
-    const newVals = checkboxValues.includes(opt)
-      ? checkboxValues.filter((v) => v !== opt)
-      : [...checkboxValues, opt];
-    setCheckboxValues(newVals);
-    onChange(newVals);
-  };
+  const { toggle } = useCheckboxAnswers((vals) => onChange(vals));
 
   return (
     <div className={styles.question}>
@@ -63,7 +55,7 @@ export default function QuestionRenderer({
                 type="checkbox"
                 value={opt}
                 className={styles.checkboxInput}
-                onChange={() => toggleCheckbox(opt)}
+                onChange={() => toggle(opt)}
               />
               <span className={styles.checkboxLabel}>{opt}</span>
             </label>

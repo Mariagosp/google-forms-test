@@ -11,17 +11,9 @@ import {
   resetBuilder,
 } from "../../features/forms/formsSlice";
 import { useAppDispatch, useAppSelector } from "../../app/store";
-import { QuestionType, type Question } from "../../services/generatedApi";
+import { type Question } from "../../services/generatedApi";
 import { useCreateFormMutation } from "../../services/generatedApi";
-
-function createNewQuestion(): Question {
-  return {
-    id: `q-b-${Date.now()}-${Math.random().toString(36).slice(2, 9)}`,
-    title: "",
-    type: QuestionType.Text,
-    options: [],
-  };
-}
+import { createEmptyBuilderQuestion, mapBuilderStateToCreateFormVariables } from "../../utils/formBuilderUtils";
 
 export default function FormBuilderPage() {
   const dispatch = useAppDispatch();
@@ -29,7 +21,7 @@ export default function FormBuilderPage() {
   const builder = useAppSelector(selectBuilder);
 
   const handleAddQuestion = () => {
-    dispatch(addQuestion(createNewQuestion()));
+    dispatch(addQuestion(createEmptyBuilderQuestion()));
   };
 
   const handleQuestionChange = (question: Question) => {
@@ -44,15 +36,7 @@ export default function FormBuilderPage() {
 
   const handleSaveForm = async () => {
     try {
-      await createForm({
-        title: builder.title.trim(),
-        description: builder.description.trim() || undefined,
-        questions: builder.questions.map((q) => ({
-          title: q.title,
-          type: q.type,
-          options: q.options?.length ? q.options : undefined,
-        })),
-      }).unwrap();
+      await createForm(mapBuilderStateToCreateFormVariables(builder)).unwrap();
       dispatch(resetBuilder());
       navigate("/");
     } catch {
