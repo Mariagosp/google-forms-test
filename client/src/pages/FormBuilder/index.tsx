@@ -12,7 +12,10 @@ import {
 } from "../../features/forms/formsSlice";
 import { useAppDispatch, useAppSelector } from "../../app/store";
 import { QuestionType, type Question } from "../../types";
-import { useCreateFormMutation } from "../../app/api/formsApi";
+import {
+  useCreateFormMutation,
+  QuestionType as GqlQuestionType,
+} from "../../services/generatedApi";
 
 function createNewQuestion(): Question {
   return {
@@ -49,7 +52,15 @@ export default function FormBuilderPage() {
         description: builder.description.trim() || undefined,
         questions: builder.questions.map((q) => ({
           title: q.title,
-          type: q.type,
+          // Map our local string-union QuestionType to GraphQL enum QuestionType
+          type:
+            q.type === QuestionType.TEXT
+              ? GqlQuestionType.Text
+              : q.type === QuestionType.MULTIPLE_CHOICE
+              ? GqlQuestionType.MultipleChoice
+              : q.type === QuestionType.CHECKBOX
+              ? GqlQuestionType.Checkbox
+              : GqlQuestionType.Date,
           options: q.options?.length ? q.options : undefined,
         })),
       }).unwrap();
@@ -119,6 +130,14 @@ export default function FormBuilderPage() {
           disabled={!builder.title.trim() || isCreating}
         >
           {isCreating ? "Saving…" : "Save form"}
+        </button>
+
+        <button
+          type="button"
+          className={styles.addQuestion}
+          onClick={handleAddQuestion}
+        >
+          + Add question
         </button>
       </div>
     </div>

@@ -1,11 +1,15 @@
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { Link, useParams } from "react-router-dom";
 import styles from "./ResponsesPage.module.css";
 import ResponseList from "../../components/ResponseList";
 import { selectFormById } from "../../features/forms/selectors";
 import { selectResponsesByFormId } from "../../features/responses/selectors";
 import { useAppSelector, useAppDispatch } from "../../app/store";
-import { useGetFormQuery, useGetResponsesQuery } from "../../app/api/formsApi";
+import {
+  useGetFormQuery,
+  useGetResponsesQuery,
+} from "../../services/generatedApi";
+import type { Form as DomainForm } from "../../types";
 import { mergeForm } from "../../features/forms/formsSlice";
 import { setResponsesForForm } from "../../features/responses/responsesSlice";
 
@@ -14,14 +18,22 @@ export default function ResponsesPage() {
   const formId = id ?? "";
   const dispatch = useAppDispatch();
 
-  const { data: formFromApi, isLoading: formLoading } = useGetFormQuery(
-    formId,
+  const {
+    data: formQueryData,
+    isLoading: formLoading,
+  } = useGetFormQuery(
+    { id: formId },
     { skip: !formId }
   );
 
-  const { data: responsesData } = useGetResponsesQuery(formId, {
-    skip: !formId,
-  });
+  const { data: responsesQueryData } = useGetResponsesQuery(
+    { formId },
+    {
+      skip: !formId,
+      // Ensure fresh data when navigating back to this page after submitting a response
+      refetchOnMountOrArgChange: true,
+    }
+  );
 
   const formFromStore = useAppSelector((state) =>
     selectFormById(state, formId)
@@ -30,6 +42,33 @@ export default function ResponsesPage() {
     selectResponsesByFormId(state, formId)
   );
 
+  // Normalize GraphQL form data into our domain `Form` type used in Redux
+  const formFromApi = useMemo((): DomainForm | undefined => {
+    if (!formQueryData?.form) return undefined;
+    return {
+      id: formQueryData.form.id,
+      title: formQueryData.form.title,
+      description: formQueryData.form.description ?? undefined,
+      questions: formQueryData.form.questions.map((q) => ({
+        id: q.id,
+        title: q.title,
+        type: q.type,
+        options: q.options ?? [],
+      })),
+    };
+  }, [formQueryData?.form]);
+
+  const normalizedResponses = useMemo(() => {
+    return responsesQueryData?.responses?.map((r) => ({
+      id: r.id,
+      formId: r.formId,
+      answers: r.answers.map((a) => ({
+        questionId: a.questionId,
+        value: a.value,
+      })),
+    })) ?? [];
+  }, [responsesQueryData?.responses]);
+
   useEffect(() => {
     if (formFromApi) {
       dispatch(mergeForm(formFromApi));
@@ -37,10 +76,12 @@ export default function ResponsesPage() {
   }, [formFromApi, dispatch]);
 
   useEffect(() => {
-    if (responsesData != null && formId) {
-      dispatch(setResponsesForForm({ formId, responses: responsesData }));
+    if (formId && normalizedResponses.length > 0) {
+      dispatch(
+        setResponsesForForm({ formId, responses: normalizedResponses })
+      );
     }
-  }, [formId, responsesData, dispatch]);
+  }, [formId, normalizedResponses, dispatch]);
 
   const form = formFromApi ?? formFromStore;
 

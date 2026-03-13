@@ -3,20 +3,20 @@ import type { TypedUseSelectorHook } from "react-redux";
 import { useSelector, useDispatch } from "react-redux";
 import formsReducer from "../features/forms/formsSlice";
 import responsesSlice from "../features/responses/responsesSlice";
-import { formsApi } from "./api/formsApi";
+import { api } from "../services/api";
 
 const rootReducer = combineReducers({
   forms: formsReducer,
   responses: responsesSlice,
 
-  [formsApi.reducerPath]: formsApi.reducer,
+  [api.reducerPath]: api.reducer,
 });
 
 export const store = configureStore({
   reducer: rootReducer,
 
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(formsApi.middleware),
+    getDefaultMiddleware().concat(api.middleware),
 });
 
 export type RootState = ReturnType<typeof rootReducer>;

@@ -4,17 +4,14 @@ const config: CodegenConfig = {
   schema: "../server/src/schema.gql",
   documents: ["src/graphql/**/*.graphql"],
   generates: {
-    "./src/graphql/generated.ts": {
-      plugins: [
-        "typescript",
-        "typescript-operations",
-        "typescript-react-apollo",
-      ],
+    "./src/services/generatedApi.ts": {
+      plugins: ["typescript", "typescript-operations", "typescript-rtk-query"],
       config: {
-        enumsAsConst: true,
-        apolloImportFrom: "@apollo/client/react",
-        apolloReactCommonImportFrom: "@apollo/client/react",
-        apolloReactHooksImportFrom: "@apollo/client/react",
+        importBaseApiFrom: "./api",
+        exportHooks: true,
+
+        documentMode: "string",
+        graphqlRequestBaseQuery: true,
       },
     },
   },

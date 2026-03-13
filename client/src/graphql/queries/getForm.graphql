@@ -1,0 +1,13 @@
+query GetForm($id: String!) {
+  form(id: $id) {
+    id
+    title
+    description
+    questions {
+      id
+      title
+      type
+      options
+    }
+  }
+}

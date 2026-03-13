@@ -1,0 +1,10 @@
+query GetResponses($formId: String!) {
+  responses(formId: $formId) {
+    id
+    formId
+    answers {
+      questionId
+      value
+    }
+  }
+}

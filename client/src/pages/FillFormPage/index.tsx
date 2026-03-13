@@ -4,12 +4,20 @@ import styles from "./FillFormPage.module.css";
 import QuestionRenderer from "../../components/QuestionRenderer";
 import { selectFormById } from "../../features/forms/selectors";
 import { useAppSelector, useAppDispatch } from "../../app/store";
+// import {
+//   useGetFormQuery,
+//   useSubmitResponseMutation,
+// } from "../../app/api/formsApi";
+import { mergeForm } from "../../features/forms/formsSlice";
 import {
   useGetFormQuery,
   useSubmitResponseMutation,
-} from "../../app/api/formsApi";
-import type { Question } from "../../types";
-import { mergeForm } from "../../features/forms/formsSlice";
+} from "../../services/generatedApi";
+import type {
+  Question as GqlQuestion,
+  Form as GqlForm,
+} from "../../services/generatedApi";
+// import { useGetFormQuery, useSubmitResponseMutation } from "../../graphql/generated";
 
 export default function FillFormPage() {
   const { id } = useParams<{ id: string }>();
@@ -21,19 +29,22 @@ export default function FillFormPage() {
     data: formFromApi,
     isLoading,
     error,
-  } = useGetFormQuery(formId, {
-    skip: !formId,
-  });
+  } = useGetFormQuery({ id: formId });
   const [submitResponse] = useSubmitResponseMutation();
-  const formFromStore = useAppSelector((state) =>
-    selectFormById(state, formId)
+  const formFromStore = useAppSelector(
+    (state) => selectFormById(state, formId) as GqlForm | undefined
   );
 
+  const form: GqlForm | undefined = formFromApi?.form ?? formFromStore;
+
   const [answers, setAnswers] = useState<
-    { questionId: string; value: string | string[] }[]
+    { questionId: GqlQuestion["id"]; value: string | string[] }[]
   >([]);
 
-  const handleAnswerChange = (questionId: string, value: string | string[]) => {
+  const handleAnswerChange = (
+    questionId: GqlQuestion["id"],
+    value: string | string[]
+  ) => {
     setAnswers((prev) => {
       const existing = prev.find((a) => a.questionId === questionId);
       if (existing) {
@@ -47,12 +58,21 @@ export default function FillFormPage() {
   };
 
   useEffect(() => {
-    if (formFromApi) {
-      dispatch(mergeForm(formFromApi));
+    if (formFromApi?.form) {
+      const safeForm = {
+        id: formFromApi.form.id,
+        title: formFromApi.form.title,
+        questions: formFromApi.form.questions.map((question) => ({
+          id: question.id,
+          title: question.title,
+          type: question.type,
+          options: question.options ?? undefined,
+        })),
+        description: formFromApi.form.description ?? undefined,
+      };
+      dispatch(mergeForm(safeForm));
     }
   }, [formFromApi, dispatch]);
-
-  const form = formFromApi ?? formFromStore;
 
   const handleSubmit = async () => {
     if (answers.length < (form?.questions.length || 0)) {
@@ -102,7 +122,7 @@ export default function FillFormPage() {
         </header>
 
         <ol className={styles.questionsList}>
-          {form.questions.map((q: Question) => (
+          {form.questions.map((q) => (
             <li key={q.id ?? q.title} className={styles.questionItem}>
               <QuestionRenderer
                 type={q.type}
