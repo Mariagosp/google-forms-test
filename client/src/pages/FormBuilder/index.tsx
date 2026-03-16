@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./FormBuilder.module.css";
 import QuestionEditor from "../../components/QuestionEditor";
@@ -19,6 +20,7 @@ export default function FormBuilderPage() {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const builder = useAppSelector(selectBuilder);
+  const [saveError, setSaveError] = useState<string | null>(null);
 
   const handleAddQuestion = () => {
     dispatch(addQuestion(createEmptyBuilderQuestion()));
@@ -35,11 +37,13 @@ export default function FormBuilderPage() {
   const [createForm, { isLoading: isCreating }] = useCreateFormMutation();
 
   const handleSaveForm = async () => {
+    setSaveError(null);
     try {
       await createForm(mapBuilderStateToCreateFormVariables(builder)).unwrap();
       dispatch(resetBuilder());
       navigate("/");
     } catch {
+      setSaveError("Failed to save the form. Please try again.");
     }
   };
 
@@ -93,6 +97,10 @@ export default function FormBuilderPage() {
           </li>
         ))}
       </ul>
+
+      {saveError && (
+        <p className={styles.errorBanner}>{saveError}</p>
+      )}
 
       <div className={styles.actions}>
         <button

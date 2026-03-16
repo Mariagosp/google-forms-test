@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { Link } from "react-router-dom";
 import styles from "./HomePage.module.css";
 import FormCard from "../../components/FormCard";
 import { useAppSelector, useAppDispatch } from "../../app/store";
@@ -33,17 +34,26 @@ export default function HomePage() {
 
       <section className={styles.section}>
         <h2 className={styles.sectionTitle}>Recent forms</h2>
-        <ul className={styles.formsList}>
-          {formsFromStore.map((form) => (
-            <li key={form.id}>
-              <FormCard
-                id={form.id}
-                title={form.title}
-                description={form.description ?? ""}
-              />
-            </li>
-          ))}
-        </ul>
+        {formsFromStore.length === 0 ? (
+          <div className={styles.empty}>
+            <p className={styles.emptyText}>You don't have any forms yet.</p>
+            <Link to="/forms/new" className={styles.emptyAction}>
+              + Create your first form
+            </Link>
+          </div>
+        ) : (
+          <ul className={styles.formsList}>
+            {formsFromStore.map((form) => (
+              <li key={form.id}>
+                <FormCard
+                  id={form.id}
+                  title={form.title}
+                  description={form.description ?? ""}
+                />
+              </li>
+            ))}
+          </ul>
+        )}
       </section>
     </div>
   );

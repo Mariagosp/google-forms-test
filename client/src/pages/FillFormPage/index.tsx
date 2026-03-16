@@ -108,6 +108,8 @@ export default function FillFormPage() {
             type="button"
             onClick={() => handleSubmit()}
             className={styles.submitButton}
+            disabled={!canSubmit}
+            title={!canSubmit ? "Please answer all questions before submitting" : undefined}
           >
             Submit
           </button>

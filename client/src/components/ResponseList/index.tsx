@@ -13,6 +13,12 @@ function formatAnswerValue(value: string | string[]): string {
 export default function ResponseList({ form, responses }: ResponseListProps) {
   const questionTitleById = new Map(form.questions.map((q) => [q.id, q.title]));
 
+  if (responses.length === 0) {
+    return (
+      <p className={styles.empty}>No responses yet. Share the form link to start collecting answers.</p>
+    );
+  }
+
   return (
     <ul className={styles.list}>
       {responses.map((response, index) => (
