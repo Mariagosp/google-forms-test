@@ -129,13 +129,4 @@ The project uses Redux Toolkit for state management, so RTK Query is the natural
 ### Why GraphQL Codegen?
 Codegen reads `server/src/schema.gql` and all `.graphql` documents in the client, then emits fully-typed RTK Query hooks into `generatedApi.ts`. This means the server schema is the single source of truth for all TypeScript types shared between packages — no manual type duplication.
 
-### In-memory store
-Data is stored in plain arrays inside the NestJS service layer. There is no database. Data resets when the server restarts. This satisfies the task requirement while keeping the server setup minimal.
-
 ---
-
-## Known Limitations
-
-- Data is not persisted — restarting the server clears all forms and responses.
-- No authentication or authorization.
-- `canSubmit` requires every question to have an answer before the form can be submitted.
