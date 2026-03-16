@@ -7,6 +7,7 @@ type QuestionEditorProps = {
   index: number;
   onQuestionChange: (question: Question) => void;
   onRemove: () => void;
+  validationError?: string;
 };
 
 const TYPE_LABELS: Record<QuestionType, string> = {
@@ -21,6 +22,7 @@ export default function QuestionEditor({
   index,
   onQuestionChange,
   onRemove,
+  validationError,
 }: QuestionEditorProps) {
   const { type, title } = question;
   const {
@@ -112,6 +114,10 @@ export default function QuestionEditor({
         )}
         {type === "DATE" && (
           <p className={styles.placeholder}>Date picker</p>
+        )}
+
+        {validationError && (
+          <p className={styles.validationError}>{validationError}</p>
         )}
 
         <button

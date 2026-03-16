@@ -6,8 +6,6 @@ export interface FormsState {
   forms: Form[];
   currentForm: Form | null;
   builder: {
-    title: string;
-    description: string;
     questions: Question[];
   };
 }
@@ -16,8 +14,6 @@ const initialState: FormsState = {
   forms: [],
   currentForm: null,
   builder: {
-    title: "",
-    description: "",
     questions: [],
   },
 };
@@ -43,14 +39,6 @@ export const formsSlice = createSlice({
       }
     },
 
-    setBuilderTitle(state, action: PayloadAction<string>) {
-      state.builder.title = action.payload;
-    },
-
-    setBuilderDescription(state, action: PayloadAction<string>) {
-      state.builder.description = action.payload;
-    },
-
     addQuestion(state, action: PayloadAction<Question>) {
       state.builder.questions.push(action.payload);
     },
@@ -65,38 +53,13 @@ export const formsSlice = createSlice({
       const index = state.builder.questions.findIndex(
         (q) => q.id === action.payload.id
       );
-
       if (index !== -1) {
         state.builder.questions[index] = action.payload;
       }
     },
 
     resetBuilder(state) {
-      state.builder = {
-        title: "",
-        description: "",
-        questions: [],
-      };
-    },
-
-    saveForm(state) {
-      const { title, description, questions } = state.builder;
-      if (!title.trim()) return;
-      const formId = `form-${Date.now()}`;
-      state.forms.push({
-        id: formId,
-        title: title.trim(),
-        description: description.trim() || undefined,
-        questions: questions.map((q, i) => ({
-          ...q,
-          id: q.id || `q-${formId}-${i}`,
-        })),
-      });
-      state.builder = {
-        title: "",
-        description: "",
-        questions: [],
-      };
+      state.builder.questions = [];
     },
   },
 });
@@ -105,13 +68,10 @@ export const {
   setForms,
   setCurrentForm,
   mergeForm,
-  setBuilderDescription,
-  setBuilderTitle,
   addQuestion,
   removeQuestion,
   updateQuestion,
   resetBuilder,
-  saveForm,
 } = formsSlice.actions;
 
 export default formsSlice.reducer;

@@ -12,14 +12,17 @@
   },
   "dependencies": {
     "@apollo/client": "^4.1.6",
+    "@hookform/resolvers": "^5.2.2",
     "@reduxjs/toolkit": "^2.11.2",
     "@rtk-query/graphql-request-base-query": "^2.3.2",
-    "graphql-request": "^7.4.0",
+    "graphql-request": "^6.1.0",
     "graphql-tag": "^2.12.6",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
+    "react-hook-form": "^7.71.2",
     "react-redux": "^9.2.0",
-    "react-router-dom": "^7.13.1"
+    "react-router-dom": "^7.13.1",
+    "yup": "^1.7.1"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.1",

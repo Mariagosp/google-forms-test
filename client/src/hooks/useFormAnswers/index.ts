@@ -10,10 +10,20 @@ export function useFormAnswers(questions: Question[] | undefined) {
     { questionId: GqlQuestion["id"]; value: string | string[] }[]
   >([]);
 
-  const canSubmit = useMemo(
-    () => !!questions && answers.length >= questions.length,
-    [questions, answers]
-  );
+  const canSubmit = useMemo(() => {
+    if (!questions || questions.length === 0) return false;
+
+    return questions.every((q) => {
+      const answer = answers.find((a) => a.questionId === q.id);
+      if (!answer) return false;
+
+      if (Array.isArray(answer.value)) {
+        return answer.value.length > 0;
+      }
+
+      return answer.value.trim().length > 0;
+    });
+  }, [questions, answers]);
 
   const handleAnswerChange = (
     questionId: GqlQuestion["id"],

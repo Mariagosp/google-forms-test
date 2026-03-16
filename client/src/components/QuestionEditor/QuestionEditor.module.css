@@ -182,3 +182,17 @@
   color: #dc2626;
   background: #fef2f2;
 }
+
+.validationError {
+  margin: 10px 0 0;
+  font-size: 0.8125rem;
+  color: #b91c1c;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.validationError::before {
+  content: "⚠";
+  font-size: 0.75rem;
+}
